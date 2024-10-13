@@ -24,12 +24,35 @@ def record_audio(filename, sec, sr = 44100):
     sd.wait()
     write(filename, sr, audio)
 
-def record_audio_manual(filename, sr = 44100):
+#def record_audio_manual(filename, sr = 44100):
+    #input("  ** Press enter to start recording **")
+    #audio = sd.rec(int(10 * sr), samplerate=sr, channels=2)
+    i#nput("  ** Press enter to stop recording **")
+    #sd.stop()
+    #write(filename, sr, audio) 
+
+def record_audio_manual(filename, sr=44100):
+    """Records audio manually after user prompt."""
+
+    # List available audio devices
+    print("Available audio devices:")
+    for i, device in enumerate(sd.query_devices()):
+        print(f"{i}: {device['name']}")
+
+    # Get user input for device selection
+    selected_device = int(input("Enter the device index to use: "))
+
     input("  ** Press enter to start recording **")
-    audio = sd.rec(int(10 * sr), samplerate=sr, channels=2)
-    input("  ** Press enter to stop recording **")
-    sd.stop()
-    write(filename, sr, audio)
+    try:
+        # Record audio using the selected device
+        audio = sd.rec(int(10 * sr), samplerate=sr, channels=2, device=selected_device)  # Specify device
+        input("  ** Press enter to stop recording **")
+        sd.stop()
+        # ... (rest of your function)
+
+    except sd.PortAudioError as e:
+        print(f"Error recording audio: {e}")
+        # Handle the error appropriately (e.g., exit, retry, etc.)
 
 def play_audio(filename):
     signal, sr = af.read(filename)
